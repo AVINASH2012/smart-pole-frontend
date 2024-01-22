@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-streetlight
+  labels:
+    app: dashboard-streetlight
+spec:
+  selector:
+    matchLabels:
+      app: dashboard-streetlight
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: dashboard-streetlight
+        env: dev
+    spec:
+      containers:
+       - name: dashboard-streetlight
+         image: azrdevarc01.azurecr.io/streetlight:latest
+         env:
+         - name: "PORT"
+           value: "80"
+         imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  dashboard-streetlight-lb-service
+spec:
+  type: LoadBalancer
+  selector:
+    app:  dashboard-streetlight
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
